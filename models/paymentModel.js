@@ -3,12 +3,12 @@ const mongoose = require('mongoose');
 const paymentSchema = new mongoose.Schema({
   order: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Order', // Reference to the Order model
+    ref: 'Order',
     required: true,
   },
   paymentMethod: {
     type: String,
-    enum: ['Credit Card', 'Debit Card', 'Stripe', 'PayPal', 'PhonePe'],
+    enum: ['Credit Card', 'Debit Card', 'Stripe', 'PayPal'],
     required: true,
   },
   paymentDetails: {
@@ -21,6 +21,11 @@ const paymentSchema = new mongoose.Schema({
     enum: ['Pending', 'Completed', 'Failed', 'Refunded'],
     default: 'Pending',
   },
+  statusHistory: [{
+    status: String,
+    updatedAt: { type: Date, default: Date.now },
+    updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+  }],
   transactionId: {
     type: String,
     unique: true,
@@ -30,8 +35,9 @@ const paymentSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-}, { timestamps: true });
-
+}, {
+  timestamps: true,
+});
 // Create and export the Payment model
 const Payment = mongoose.model('payments', paymentSchema);
 module.exports = Payment;

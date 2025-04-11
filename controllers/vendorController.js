@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 
 //Register Vendor
 const registerVendor = async (req, res) => {
-    const { name, email, password, confirmpassword, phone, homeaddress, companyDetails, bankAccount } = req.body
+    const { name, email, password, confirmpassword, gender, age, phone, homeaddress, companyDetails, bankAccount } = req.body
 
     if (!name || !email || !password || !confirmpassword || !phone || !companyDetails || !bankAccount) {
         return res.status(400).json({ error: "All fields are required." });
@@ -38,7 +38,7 @@ const registerVendor = async (req, res) => {
         // bcrypt: password hashing algorithm used to hash password before saving to DB
         const encryptedPassword = await encryptPassword(password);
 
-        vendor = new VendorModel({ name, email, password: encryptedPassword, phone, homeaddress, companyDetails, bankAccount })
+        vendor = new VendorModel({ name, email, password: encryptedPassword, gender, age, phone, homeaddress, companyDetails, bankAccount })
 
         await vendor.save()
         const jwtSecret = process.env.JWT_SECRET;

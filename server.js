@@ -29,6 +29,16 @@ app.use("/api/auth/product", productRoutes);
 const cartRoutes= require("./routes/cartRoutes");
 app.use("/api/auth/cart", cartRoutes);
 
+// Order Routes
+const orderRoutes= require("./routes/orderRoutes");
+app.use("/api/auth/order", orderRoutes);
+
+
+// Payment Routes
+const paymentRoutes= require("./routes/paymentRoutes");
+app.use("/api/auth/payment", paymentRoutes);
+
+
 app.get("/", (req,res)=>{
     res.send("Multi Vendor Market Place is running");
 });

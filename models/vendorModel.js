@@ -36,6 +36,7 @@ const bankAccountSchema = new mongoose.Schema({
     },
     ifscCode: {
         type: String,
+        required: true,
         trim: true
     },
     bankName: {
@@ -71,6 +72,15 @@ const vendorSchema = new mongoose.Schema({
     phone: {
         type: String,
         required: true
+    },
+    age: {
+        type: Number,
+        required: false
+    },
+    gender: {
+        type: String,
+        enum: ['male', 'female', 'other'],
+        required: false
     },
     homeaddress: {
         street: { type: String},
