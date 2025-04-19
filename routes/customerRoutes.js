@@ -12,7 +12,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 // Register Customer
 router.post("/registerCustomer", registerCustomer);
 // User Login
-router.post("/userLogin", authMiddleware, userLogin);
+router.post("/userLogin", userLogin);
 // User Logout
 router.post("/userLogout", authMiddleware, userLogout);
 // Retrieve all users with customer role

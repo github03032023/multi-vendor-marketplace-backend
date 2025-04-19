@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 
 //Register Vendor
 const registerVendor = async (req, res) => {
+    console.log("Request -",req.body);
     const { name, email, password, confirmpassword, gender, age, phone, homeaddress, companyDetails, bankAccount } = req.body
 
     if (!name || !email || !password || !confirmpassword || !phone || !companyDetails || !bankAccount) {
@@ -66,6 +67,7 @@ const registerVendor = async (req, res) => {
 const vendorLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
+        console.log("Request is ",req.body );
 
         if (!email || !password) {
             return res.status(400).json({ error: "Please enter email and password." });

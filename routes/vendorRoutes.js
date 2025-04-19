@@ -11,7 +11,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 // Register Vendor
 router.post("/registerVendor", registerVendor);
-router.post("/vendorLogin", authMiddleware, vendorLogin);
+router.post("/vendorLogin",  vendorLogin);
 // Vendor Logout
 router.post("/vendorLogout", authMiddleware, vendorLogout);
 router.get("/getAllVendors", authMiddleware, getAllVendors);

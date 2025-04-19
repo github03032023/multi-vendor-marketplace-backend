@@ -115,7 +115,7 @@ const deleteProductByCode = async (req, res) => {
 
 
 //Get ALL Active Products for a particular Vendor
-const getActiveProducts = async (req, res) => {
+const getActiveProductsForVendor = async (req, res) => {
     try {
         const { vendorName } = req.params;
         if (!vendorName) {
@@ -145,11 +145,32 @@ const getActiveProducts = async (req, res) => {
 };
 
 
+//Get ALL Produvts
+const getActiveProducts = async (req, res) => {
+    try {
+        const activeProducts = await ProductModel.find({ isActive: true });
+        // .populate({
+        //     path: 'vendorId',
+        //     select: 'name companyDetails.companyName companyDetails.companyAddress.country'
+        // });
+        return res.status(200).json({
+            success: true,
+            products: activeProducts
+        });
+    } catch (error) {
+        console.error("Error retrieving active products:", error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+
+
 
 
 module.exports = {
     registerProduct,
     updateProductByCode,
     deleteProductByCode,
+    getActiveProductsForVendor,
     getActiveProducts
 };
