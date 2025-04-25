@@ -8,7 +8,8 @@ const orderSchema = new mongoose.Schema({
   },
   paymentId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'payments'
+    ref: 'payments',
+    default: null,
     // required: true,
   },
   subOrders: [{
@@ -29,7 +30,7 @@ const orderSchema = new mongoose.Schema({
     subTotal: { type: Number, required: true },
     status: {
       type: String,
-      enum: ['Processing', 'Shipped', 'Delivered', 'Cancelled'],
+      enum: ['Processing', 'Paid', 'Shipped', 'Delivered', 'Cancelled'],
       default: 'Processing',
     },
     statusHistory: [{
@@ -48,7 +49,7 @@ const orderSchema = new mongoose.Schema({
   },
   overallStatus: {
     type: String,
-    enum: ['Processing', 'Partially Shipped', 'Shipped', 'Completed', 'Cancelled'],
+    enum: ['Processing', 'Paid', 'Partially Shipped', 'Shipped', 'Completed', 'Cancelled'],
     default: 'Processing',
   },
   overallStatusHistory: [{

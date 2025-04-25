@@ -4,7 +4,8 @@ const { generateProductCode } = require("../utilities/productUtilities");
 
 const registerProduct = async (req, res) => {
     try {
-        const { productName, description, price, quantity, category, vendorId, images } = req.body;
+        const { productName, description, price, quantity, category, vendorId } = req.body;
+
 
         if (!productName || !description || !price || !quantity || !category || !vendorId || !images) {
             return res.status(400).json({ error: "All fields are required." });
@@ -18,6 +19,13 @@ const registerProduct = async (req, res) => {
 
         // Generate productCode
         const productCode = generateProductCode(productName, category);
+
+        // Build images array with url and default altText
+        const images = req.files?.map(file => ({
+            url: file.path, // multer provides path
+            altText: `${productName} image`
+        })) || [];
+
 
         const newProduct = new ProductModel({
             productCode,
@@ -49,7 +57,8 @@ const registerProduct = async (req, res) => {
 const updateProductByCode = async (req, res) => {
     try {
         const { productCode } = req.params;
-        const { productName, description, price, quantity, category, vendorId, images } = req.body;
+        const { productName, description, price, quantity, category, vendorId } = req.body;
+
 
         if (!productCode) {
             return res.status(400).json({ error: "Product code is required." });
@@ -62,6 +71,14 @@ const updateProductByCode = async (req, res) => {
             return res.status(404).json({ error: "Product not found." });
         }
 
+
+        if (req.files && req.files.length > 0) {
+            product.images = req.files.map(file => ({
+                url: file.path,
+                altText: `${product.productName} image`
+            }));
+        }
+
         // Update fields if they are provided
         if (productName !== undefined) product.productName = productName;
         if (description !== undefined) product.description = description;
@@ -69,7 +86,7 @@ const updateProductByCode = async (req, res) => {
         if (quantity !== undefined) product.quantity = quantity;
         if (category !== undefined) product.category = category;
         if (vendorId !== undefined) product.vendorId = vendorId;
-        if (images !== undefined) product.images = images;
+        if (images && images.length > 0) product.images = product.images;
 
         // Save the updated product
         const updatedProduct = await product.save();

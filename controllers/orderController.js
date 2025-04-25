@@ -8,12 +8,21 @@ const createOrder = async (req, res) => {
       subOrders,
       totalAmount,
       shippingAddress,
+      updatedBy 
     } = req.body;
+
+    // Set initial history per subOrder
+    const subOrdersWithHistory = subOrders.map(sub => ({
+      ...sub,
+      status: 'Processing',
+      statusHistory: [{ status: 'Processing', updatedBy }]
+    }));
+
 
     // Create the order first without paymentId (null)
     const order = new Order({
       customerId,
-      subOrders,
+      subOrders : subOrdersWithHistory,
       totalAmount,
       shippingAddress,
       paymentId: null, // will be updated after payment
@@ -67,7 +76,6 @@ const getOrderById = async (req, res) => {
             updatedAt: new Date(),
             updatedBy,
           });
-    //   subOrder.statusHistory.push({ status, updatedBy });
 
        // Determine overall order status based on all sub-orders
     const allStatuses = order.subOrders.map(so => so.status);

@@ -10,10 +10,30 @@ const {
 const router = express.Router();
 const authMiddleware = require('../middleware/authMiddleware');
 
-// Register Product
-router.post("/registerProduct", authMiddleware, registerProduct);
+
+const multer = require('multer');
+
+// Multer setup
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+const upload = multer({ storage });
+
+
+
+// Register Product with file upload
+router.post('/registerProduct', upload.array('images', 5), authMiddleware, registerProduct);
+// router.post("/registerProduct", authMiddleware, registerProduct);
+
 // Update Products based on productCode
-router.put("/updateProduct/:productCode", authMiddleware,  updateProductByCode);
+router.put('/updateProduct/:productCode', upload.array('images', 5), authMiddleware, updateProductByCode);
+// router.put("/updateProduct/:productCode", authMiddleware,  updateProductByCode);
+
 // Delete product based on productCode
 router.put("/deleteProduct/:productCode", authMiddleware,  deleteProductByCode);
 // Get all active products based on vendor name

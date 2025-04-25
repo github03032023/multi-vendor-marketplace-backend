@@ -3,8 +3,20 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDb = require("./config/db");
 
+const fs = require('fs');
+const path = require('path');
+
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+}
+
+
 dotenv.config();
 const app= express();
+
+//  Make 'uploads' folder publicly accessible
+app.use('/uploads', express.static(uploadsDir));
 
 
 app.use(cors());
@@ -38,6 +50,12 @@ app.use("/api/auth/order", orderRoutes);
 const paymentRoutes= require("./routes/paymentRoutes");
 app.use("/api/auth/payment", paymentRoutes);
 
+
+const vendorDashboardRoutes = require("./routes/vendorDashBoardRoutes");
+app.use("/api/auth/vendorDashboard/orders", vendorDashboardRoutes);
+
+const analyticsRoutes = require("./routes/analyticsRoutes");
+app.use("/api/auth/analytics", analyticsRoutes);
 
 app.get("/", (req,res)=>{
     res.send("Multi Vendor Market Place is running");
