@@ -98,7 +98,7 @@ const removeFromCart = async (req, res) => {
 
     const userId = req.userId;
     const { productCode } = req.body;
-    console.log("productCode-",productCode);
+    console.log("productCode-", productCode);
 
     // Find product by productCode
     const product = await ProductModel.findOne({ productCode });
@@ -209,6 +209,9 @@ const getCartItems = async (req, res) => {
       const vendorId = product.vendorId.toString();
       const vendor = vendorMap[vendorId] || {};
 
+      console.log("product",product);
+      console.log("vendorId",vendorId);
+      console.log("vendor",vendor);
       return {
         productId: product._id,
         productName: product.productName,
@@ -224,6 +227,9 @@ const getCartItems = async (req, res) => {
       };
     });
 
+    console.log("req.userId:", req.userId);
+    console.log("customer.cart:", customer.cart);
+    console.log("Mapped cartItems:", cartItems);
     return res.status(200).json({
       message: "Cart retrieved successfully",
       cart: cartItems,
