@@ -60,7 +60,7 @@ const registerVendor = async (req, res) => {
         const html = `
  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
   <div style="text-align: center;">
-    <img src="https://i.ibb.co/J5xw8qT/smartbuy-logo.png" alt="SmartBuy Logo" style="width: 150px; margin-bottom: 20px;" />
+   <img src="https://multi-vendor-marketplace-backend.onrender.com/public/images/smartBuy.png" alt="SmartBuy Logo" style="width: 150px; margin-bottom: 20px;" />
     <h2 style="color: #4CAF50;">Welcome to SmartBuy, ${vendor.name}!</h2>
     <p style="font-size: 16px;">We're excited to have you join our growing network of trusted vendors.</p>
     <p style="font-size: 18px; font-style: italic; margin: 20px 0; color: #2196F3;">
@@ -174,7 +174,7 @@ const verifyVendorEmail = async (req, res) => {
         const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
     <div style="text-align: center;">
-    <img src="https://i.ibb.co/J5xw8qT/smartbuy-logo.png" alt="SmartBuy Logo" style="width: 150px; margin-bottom: 20px;" />
+    <img src="https://multi-vendor-marketplace-backend.onrender.com/public/images/smartBuy.png" alt="SmartBuy Logo" style="width: 150px; margin-bottom: 20px;" />
     <h6 style="color: #4CAF50;">Dear ${adminData.name}!</h6><br/>
     <p style="font-size: 16px;">Please approve the newly registered vendor ${vendor.name}. </p>
     <p style="font-size: 18px; font-style: italic; margin: 20px 0; color: #2196F3;">

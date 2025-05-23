@@ -50,7 +50,7 @@ const registerCustomer = async (req, res) => {
         const html = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
           <div style="text-align: center;">
-            <img src="https://i.ibb.co/J5xw8qT/smartbuy-logo.png" alt="SmartBuy Logo" style="width: 150px; margin-bottom: 20px;" />
+          <img src="https://multi-vendor-marketplace-backend.onrender.com/public/images/smartBuy.png" alt="SmartBuy Logo" style="width: 150px; margin-bottom: 20px;" />
             <h2 style="color: #4CAF50;">Welcome to SmartBuy, ${savedCustomer.name}!</h2>
             <p style="font-size: 16px;">Your one-stop shop for everything you love — and more.</p>
             <p style="font-size: 18px; font-style: italic; margin: 20px 0; color: #FF5722;">

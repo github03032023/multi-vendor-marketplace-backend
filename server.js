@@ -36,6 +36,11 @@ app.use(express.urlencoded({ extended: true }));
 
 connectDb();
 
+
+// Make the logo Public so that it can be accessed
+app.use('/public', express.static('public'));
+
+
 // Customer Routes
 const customerRoutes = require("./routes/customerRoutes");
 app.use("/api/auth/customer", customerRoutes);
