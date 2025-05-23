@@ -10,10 +10,14 @@ const updatePaymentStatus = async (req, res) => {
 
     payment.paymentStatus = newStatus;
 
+      // Determine updatedByModel
+      let updatedByModel = 'customers';
+
     payment.statusHistory.push({
       status: newStatus,
       updatedAt: new Date(),
       updatedBy: req.user._id,
+      updatedByModel,
     });
 
     await payment.save();

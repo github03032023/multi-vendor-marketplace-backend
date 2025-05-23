@@ -32,6 +32,29 @@ const productSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    brand: {                     
+        type: String,
+        required: true,
+        trim: true,
+    },
+    model: {                      
+        type: String,
+        required: true,
+        trim: true,
+    },
+    color: {                     
+        type: String,
+        required: true,
+        trim: true,
+    },
+    type: {                       
+        type: String,
+        trim: true,
+    },
+    suitableFor: {                
+        type: String,
+        trim: true,
+    },
     vendorId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'vendors', // References the Vendor model
@@ -40,6 +63,10 @@ const productSchema = new mongoose.Schema({
     images: [
         {
             url: {
+                type: String,
+                required: true,
+            },
+            publicId: {  // Add this field
                 type: String,
                 required: true,
             },

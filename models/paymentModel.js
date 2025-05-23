@@ -21,11 +21,25 @@ const paymentSchema = new mongoose.Schema({
     enum: ['Pending', 'Completed', 'Failed', 'Refunded'],
     default: 'Pending',
   },
+  // statusHistory: [{
+  //   status: String,
+  //   updatedAt: { type: Date, default: Date.now },
+  //   updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'customers' },
+  // }],
   statusHistory: [{
-    status: String,
-    updatedAt: { type: Date, default: Date.now },
-    updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
-  }],
+        status: String,
+        updatedAt: { type: Date, default: Date.now },
+        updatedBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          refPath: 'statusHistory.updatedByModel'
+        },
+        updatedByModel: {
+          type: String,
+          required: true,
+          enum: ['customers', 'vendors'] 
+        }
+      }],
   transactionId: {
     type: String,
     unique: true,

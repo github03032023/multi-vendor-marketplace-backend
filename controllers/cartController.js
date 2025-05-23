@@ -98,6 +98,7 @@ const removeFromCart = async (req, res) => {
 
     const userId = req.userId;
     const { productCode } = req.body;
+    console.log("productCode-",productCode);
 
     // Find product by productCode
     const product = await ProductModel.findOne({ productCode });
@@ -125,9 +126,35 @@ const removeFromCart = async (req, res) => {
     customer.cart.splice(cartItemIndex, 1);
     await customer.save();
 
+    const savedCustomer = await CustomerModel.findById(req.userId)
+      .populate({
+        path: "cart.productId",
+        model: "products",
+        select: "productCode productName description category vendorId price images quantity", // Fields to return from product
+      });
+
+    // Construct cart items with product details
+    const cartItems = savedCustomer.cart.map(item => {
+      const product = item.productId; // Populated product object
+      return {
+        productId: product.productId,
+        productName: product.productName,
+        productCode: product.productCode,
+        description: product.description,
+        price: product.price,
+        category: product.category,
+        images: product.images?.[0]?.url || null,
+        vendorId: product.vendorId,
+        //   image: product.images?.[0]?.url || null,
+        quantity: item.quantity,
+      };
+    });
+
+
+
     return res.status(200).json({
       message: "Product removed from cart.",
-      updatedCart: customer.cart
+      updatedCart: cartItems
     });
 
   } catch (error) {
@@ -135,58 +162,6 @@ const removeFromCart = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
-
-// const getCartItems = async (req, res) => {
-//     try {
-//       if (!req.userId) {
-//         return res.status(401).json({
-//           success: false,
-//           message: "Unauthorized: Invalid or missing token",
-//         });
-//       }
-
-//       const customer = await CustomerModel.findById(req.userId)
-//         .populate({
-//           path: "cart.productId",
-//           model: "products",
-//           select: " _id productCode productName description category vendorId price images quantity", // Fields to return from product
-//         });
-
-//       if (!customer) {
-//         return res.status(404).json({ error: "Customer not found." });
-//       }
-
-//       // Construct cart items with product details
-//       const cartItems = customer.cart.map(item => {
-//         const product = item.productId; // Populated product object
-//         return {
-
-//         productId: product._id,
-//             productName : product.productName,
-//             productCode: product.productCode,
-//             description: product.description,
-//             price: product.price,
-//             category: product.category,
-//             images: product.images,
-//             vendorId : product.vendorId,
-//             quantity: item.quantity,
-//         };
-//       });
-
-//       return res.status(200).json({
-//         message: "Cart retrieved successfully",
-//         cart: cartItems,
-//       });
-//     } catch (error) {
-//       console.error("Get cart items error:", error);
-//       res.status(500).json({ error: "Internal Server Error" });
-//     }
-//   };
-
-
-
-
 
 const getCartItems = async (req, res) => {
   try {

@@ -16,7 +16,7 @@ const companyDetailsSchema = new mongoose.Schema({
     },
     companyType: {
         type: String,
-        enum: ['Proprietorship', 'Partnership', 'LLP', 'Private Limited Company'],
+        enum: ['Proprietorship', 'Partnership', 'LLP', 'Private Limited Company', 'Other'],
         required: true
     }
 });
@@ -83,7 +83,7 @@ const vendorSchema = new mongoose.Schema({
         required: false
     },
     homeaddress: {
-        street: { type: String},
+        street: { type: String },
         city: { type: String },
         state: { type: String, required: true },
         postalCode: { type: String, required: true },
@@ -97,6 +97,15 @@ const vendorSchema = new mongoose.Schema({
         type: bankAccountSchema,
         required: true
     },
+    availableBalance: {
+        type: Number,
+        default: 0,
+    },
+    totalEarned: {
+        type: Number,
+        default: 0,
+    },
+    isVerified: { type: Boolean, default: false },
     isActive: {
         type: Boolean,
         default: true
@@ -104,6 +113,10 @@ const vendorSchema = new mongoose.Schema({
     isDeleted: {
         type: Boolean,
         default: false
+    },
+    isApproved: {
+        type: Boolean,
+        default: false // only admins can approve after registration
     }
 }, { timestamps: true });
 

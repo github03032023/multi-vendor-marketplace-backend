@@ -57,6 +57,7 @@ const customerSchema = new mongoose.Schema({
         required: true
     },
     cart: [cartSchema],
+    isVerified: { type: Boolean, default: false },
     isActive: {
         type: Boolean,
         default: true

@@ -3,7 +3,8 @@ const {
     registerVendor,
     vendorLogin,
     vendorLogout,
-    getAllVendors
+    getAllVendors,
+    verifyVendorEmail
 } = require("../controllers/vendorController");
 
 const router = express.Router();
@@ -15,7 +16,8 @@ router.post("/vendorLogin",  vendorLogin);
 // Vendor Logout
 router.post("/vendorLogout", authMiddleware, vendorLogout);
 router.get("/getAllVendors", authMiddleware, getAllVendors);
-
+// Verify Email
+router.get('/verifyVendorEmail', verifyVendorEmail );
 
 
 module.exports = router;

@@ -24,46 +24,16 @@ exports.createPaymentIntent = async (req, res) => {
   }
 };
 
-// exports.confirmPayment = async (req, res) => {
-//   const { orderId, paymentIntent } = req.body;
-
-//   try {
-//     const order = await Order.findById(orderId);
-//     if (!order) return res.status(404).json({ error: "Order not found" });
-
-//     const payment = new Payment({
-//       order: orderId,
-//       paymentMethod: "Stripe",
-//       paymentDetails: paymentIntent.charges?.data[0]?.billing_details || {},
-//       paymentStatus: "Completed",
-//       transactionId: paymentIntent.id,
-//       statusHistory: [{
-//         status: "Completed",
-//         updatedBy: order.customerId,
-//       }],
-//     });
-
-//     const savedPayment = await payment.save();
-
-//     order.paymentId = savedPayment._id;
-//     await order.save();
-
-//     res.status(200).json({ message: "Payment confirmed", paymentId: savedPayment._id });
-//   } catch (err) {
-//     console.error("Confirm Payment Error:", err);
-//     res.status(500).json({ error: "Failed to confirm payment" });
-//   }
-// };
-
-
-
-
 exports.confirmPayment = async (req, res) => {
   const { orderId, paymentIntent } = req.body;
 
   try {
     const order = await Order.findById(orderId).populate('subOrders.products.productId');
     if (!order) return res.status(404).json({ error: "Order not found" });
+
+        // Determine updatedByModel
+        let updatedByModel = 'customers';
+    
 
     //  Save payment
     const payment = new Payment({
@@ -76,6 +46,7 @@ exports.confirmPayment = async (req, res) => {
         status: "Completed",
         updatedAt: new Date(),
         updatedBy: order.customerId,
+        updatedByModel,
       }],
     });
 
@@ -84,11 +55,13 @@ exports.confirmPayment = async (req, res) => {
     //  Update order
     order.paymentId = savedPayment._id;
 
+
     order.overallStatus = "Paid";
     order.overallStatusHistory.push({
       status: "Paid",
       updatedAt: new Date(),
       updatedBy: order.customerId,
+      updatedByModel,
     });
 
 
@@ -98,6 +71,7 @@ exports.confirmPayment = async (req, res) => {
         subOrder.statusHistory.push({
           status: "Paid",
           updatedBy: order.customerId,
+          updatedByModel,
         });
       });
 
@@ -107,7 +81,7 @@ exports.confirmPayment = async (req, res) => {
     for (const subOrder of order.subOrders) {
       for (const product of subOrder.products) {
         await Product.findByIdAndUpdate(product.productId, {
-          $inc: { stock: -product.quantity }
+          $inc: { quantity: -product.quantity }
         });
       }
     }

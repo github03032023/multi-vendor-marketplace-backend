@@ -29,15 +29,15 @@ const authMiddleware = (req, res, next) => {
         else {
             return res.status(401).json({
                 success: false,
-                statusode: 401,
-                message: "Not Authroized"
+                statusCode: 401,
+                message: "Not Authorized"
             })
         }
     } catch (err) {
         console.log("Error in authMiddleware:", err);
         return res.status(401).json({
             success: false,
-            statusode: 401,
+            statusCode: 401,
             message: "Invalid or Expired Token"
         })
     }

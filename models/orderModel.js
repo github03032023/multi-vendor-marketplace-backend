@@ -30,14 +30,28 @@ const orderSchema = new mongoose.Schema({
     subTotal: { type: Number, required: true },
     status: {
       type: String,
-      enum: ['Processing', 'Paid', 'Shipped', 'Delivered', 'Cancelled'],
+      enum: ['Processing', 'Paid', 'Shipped', 'Delivered', 'Cancelled', 'Return Requested', 'Returned', 'Return Rejected'],
       default: 'Processing',
     },
     statusHistory: [{
       status: String,
       updatedAt: { type: Date, default: Date.now },
-      updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+      updatedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        refPath: 'statusHistory.updatedByModel'
+      },
+      updatedByModel: {
+        type: String,
+        required: true,
+        enum: ['customers', 'vendors'] 
+      }
+      
+      // updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     }],
+    isVendorPaid: { type: Boolean, default: false },
+    vendorEarnings: { type: Number, default: 0 },
+    deliveredAt: { type: Date },
   }],
   totalAmount: { type: Number, required: true },
   shippingAddress: {
@@ -49,13 +63,23 @@ const orderSchema = new mongoose.Schema({
   },
   overallStatus: {
     type: String,
-    enum: ['Processing', 'Paid', 'Partially Shipped', 'Shipped', 'Completed', 'Cancelled'],
+    enum: ['Processing', 'Paid', 'Partially Shipped', 'Partially Delivered', 'Shipped', 'Completed', 'Cancelled', 'Return Requested', 'Returned', 'Return Rejected'],
     default: 'Processing',
   },
   overallStatusHistory: [{
     status: String,
     updatedAt: { type: Date, default: Date.now },
-    updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+     updatedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        refPath: 'overallStatusHistory.updatedByModel'
+      },
+      updatedByModel: {
+        type: String,
+        required: true,
+        enum: ['customers', 'vendors'] 
+      }
+    // updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
   }],
 }, {
   timestamps: true,
