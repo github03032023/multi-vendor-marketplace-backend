@@ -56,25 +56,87 @@ const addToCart = async (req, res) => {
       .populate({
         path: "cart.productId",
         model: "products",
-        select: "productCode productName description category vendorId price images quantity", // Fields to return from product
+        select: "_id productCode productName description category vendorId price images quantity", // Fields to return from product
       });
 
-    // Construct cart items with product details
-    const cartItems = savedCustomer.cart.map(item => {
-      const product = item.productId; // Populated product object
-      return {
-        productId: product.productId,
-        productName: product.productName,
-        productCode: product.productCode,
-        description: product.description,
-        price: product.price,
-        category: product.category,
-        images: product.images?.[0]?.url || null,
-        vendorId: product.vendorId,
-        //   image: product.images?.[0]?.url || null,
-        quantity: item.quantity,
-      };
-    });
+
+
+
+     
+      if (!savedCustomer) {
+        return res.status(404).json({ error: "Customer not found." });
+      }
+  
+      //unique vendorIds from cart products
+      const vendorIds = [...new Set(savedCustomer.cart.map(item => item.productId?.vendorId?.toString()))];
+  
+      console.log("Vendor IDs from cart:", vendorIds);
+  
+      //Fetch all suborders vendor details 
+      const vendors = await VendorModel.find({ _id: { $in: vendorIds } }).select("_id name email companyDetails.companyName companyDetails.companyAddress.country");
+  
+      //Map vendorId to vendor info 
+      const vendorMap = {};
+      vendors.forEach(v => {
+        vendorMap[v._id.toString()] = {
+          companyName: v.companyDetails.companyName,
+          country: v.companyDetails.companyAddress.country
+        };
+      });
+  
+      console.log("Fetched vendors:", vendors.map(v => v._id.toString()));
+      console.log("Cart Products:", customer.cart.map(i => i.productId));
+      console.log("Vendor Map:", vendorMap);
+  
+      // cart items
+      const cartItems = savedCustomer.cart.map(item => {
+        const product = item.productId;
+        const vendorId = product.vendorId.toString();
+        const vendor = vendorMap[vendorId] || {};
+  
+        console.log("product",product);
+        console.log("vendorId",vendorId);
+        console.log("vendor",vendor);
+        return {
+          productId: product._id,
+          productName: product.productName,
+          productCode: product.productCode,
+          description: product.description,
+          price: product.price,
+          category: product.category,
+          images: product.images,
+          vendorId,
+          vendorCompanyName: vendor.companyName || "CompanyName",
+          vendorCountry: vendor.country,
+          quantity: item.quantity,
+        };
+      });
+
+
+
+
+
+
+
+
+
+
+    // // Construct cart items with product details
+    // const cartItems = savedCustomer.cart.map(item => {
+    //   const product = item.productId; // Populated product object
+    //   return {
+    //     productId: product.productId,
+    //     productName: product.productName,
+    //     productCode: product.productCode,
+    //     description: product.description,
+    //     price: product.price,
+    //     category: product.category,
+    //     images: product.images?.[0]?.url || null,
+    //     vendorId: product.vendorId,
+    //     //   image: product.images?.[0]?.url || null,
+    //     quantity: item.quantity,
+    //   };
+    // });
 
 
 
