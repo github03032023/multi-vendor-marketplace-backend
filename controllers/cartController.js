@@ -72,7 +72,7 @@ const addToCart = async (req, res) => {
         images: product.images?.[0]?.url || null,
         vendorId: product.vendorId,
         //   image: product.images?.[0]?.url || null,
-        quantity: product.quantity,
+        quantity: item.quantity,
       };
     });
 
